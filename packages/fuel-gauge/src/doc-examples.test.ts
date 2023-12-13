@@ -235,7 +235,7 @@ describe('Doc Examples', () => {
 
   it('can connect to a local provider', async () => {
     // #region provider-local
-    // #context import { Provider, WalletUnlocked } from 'fuels';
+    // #context import { Provider, WalletUnlocked, FUEL_NETWORK_URL } from 'fuels';
     const localProvider = await Provider.create(FUEL_NETWORK_URL);
     // Setup a private key
     const PRIVATE_KEY = 'a1447cd75accc6b71a976fd3401a1f6ce318d27ba660b0315ee6ac347bf39568';
@@ -251,7 +251,7 @@ describe('Doc Examples', () => {
 
   it('can query address with wallets', async () => {
     // #region wallet-query
-    // #context import { Provider } from 'fuels';
+    // #context import { Provider, FUEL_NETWORK_URL } from 'fuels';
     // #context import { generateTestWallet } from '@fuel-ts/wallet/test-utils';
     const provider = await Provider.create(FUEL_NETWORK_URL);
     const assetIdA = '0x0101010101010101010101010101010101010101010101010101010101010101';
@@ -306,7 +306,7 @@ describe('Doc Examples', () => {
 
   it('can create a predicate', async () => {
     // #region predicate-basic
-    // #context import { Predicate, arrayify } from 'fuels';
+    // #context import { Predicate, arrayify, FUEL_NETWORK_URL } from 'fuels';
     const provider = await Provider.create(FUEL_NETWORK_URL);
     const predicate = new Predicate(testPredicateTrue, provider);
 
@@ -388,6 +388,7 @@ describe('Doc Examples', () => {
 
     const response = await wallet1.transfer(predicate.address, amountToPredicate, BaseAssetId, {
       gasPrice,
+      gasLimit: 10_000,
     });
     await response.waitForResult();
     const predicateBalance = await predicate.getBalance();
@@ -395,8 +396,9 @@ describe('Doc Examples', () => {
     // assert that predicate address now has the expected amount to predicate
     expect(bn(predicateBalance)).toEqual(initialPredicateBalance.add(amountToPredicate));
 
-    const depositOnPredicate = await wallet1.transfer(predicate.address, 200, BaseAssetId, {
+    const depositOnPredicate = await wallet1.transfer(predicate.address, 1000, BaseAssetId, {
       gasPrice,
+      gasLimit: 10_000,
     });
     // Wait for Transaction to succeed
     await depositOnPredicate.waitForResult();
@@ -404,7 +406,7 @@ describe('Doc Examples', () => {
 
     // assert that predicate address now has the updated expected amount to predicate
     expect(bn(updatedPredicateBalance)).toEqual(
-      initialPredicateBalance.add(amountToPredicate).add(200)
+      initialPredicateBalance.add(amountToPredicate).add(1000)
     );
 
     const dataToSign = '0x0000000000000000000000000000000000000000000000000000000000000000';
@@ -416,7 +418,7 @@ describe('Doc Examples', () => {
 
     const tx = await predicate
       .setData(signatures)
-      .transfer(receiver.address, amountToReceiver, BaseAssetId, { gasPrice });
+      .transfer(receiver.address, amountToReceiver, BaseAssetId, { gasPrice, gasLimit: 10_000 });
     await tx.waitForResult();
 
     // check balances
