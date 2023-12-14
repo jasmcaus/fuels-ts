@@ -18,23 +18,19 @@ interface InitialState {
   messages: Message[];
 }
 
-interface TransactionParameters {
-  contract_max_size: number;
-  max_inputs: number;
-  max_outputs: number;
-  max_witnesses: number;
-  max_gas_per_tx: number;
-  max_script_length: number;
-  max_script_data_length: number;
-  max_storage_slots: number;
-  max_predicate_length: number;
-  max_predicate_data_length: number;
-  max_gas_per_predicate: number;
-  gas_price_factor: number;
-  gas_per_byte: number;
-  max_message_data_length: number;
-  chain_id: number;
-}
+type Operation =
+  | {
+      LightOperation: {
+        base: number;
+        units_per_gas: number;
+      };
+    }
+  | {
+      HeavyOperation: {
+        base: number;
+        gas_per_unit: number;
+      };
+    };
 interface GasCosts {
   add: number;
   addi: number;
@@ -53,6 +49,10 @@ interface GasCosts {
   divi: number;
   ecr1: number;
   eck1: number;
+  poph: number;
+  popl: number;
+  pshh: number;
+  pshl: number;
   ed19: number;
   eq: number;
   exp: number;
@@ -72,12 +72,11 @@ interface GasCosts {
   jnzb: number;
   jnef: number;
   jneb: number;
-  k256: number;
+  k256: Operation;
   lb: number;
   log: number;
   lt: number;
   lw: number;
-  mcpi: number;
   mint: number;
   mlog: number;
   modOp: number;
@@ -94,9 +93,9 @@ interface GasCosts {
   ori: number;
   ret: number;
   rvrt: number;
-  s256: number;
+  s256: Operation;
   sb: number;
-  scwq: number;
+  scwq: Operation;
   sll: number;
   slli: number;
   srl: number;
@@ -106,7 +105,7 @@ interface GasCosts {
   subi: number;
   sw: number;
   sww: number;
-  swwq: number;
+  swwq: Operation;
   time: number;
   tr: number;
   tro: number;
@@ -126,54 +125,23 @@ interface GasCosts {
   wqmm: number;
   xor: number;
   xori: number;
-  call: {
-    base: number;
-    dep_per_unit: number;
-  };
-  ccp: {
-    base: number;
-    dep_per_unit: number;
-  };
-  csiz: {
-    base: number;
-    dep_per_unit: number;
-  };
-  ldc: {
-    base: number;
-    dep_per_unit: number;
-  };
-  logd: {
-    base: number;
-    dep_per_unit: number;
-  };
-  mcl: {
-    base: number;
-    dep_per_unit: number;
-  };
-  mcli: {
-    base: number;
-    dep_per_unit: number;
-  };
-  mcp: {
-    base: number;
-    dep_per_unit: number;
-  };
-  meq: {
-    base: number;
-    dep_per_unit: number;
-  };
-  retd: {
-    base: number;
-    dep_per_unit: number;
-  };
-  smo: {
-    base: number;
-    dep_per_unit: number;
-  };
-  srwq: {
-    base: number;
-    dep_per_unit: number;
-  };
+  new_storage_per_byte: number;
+  contract_root: Operation;
+  state_root: Operation;
+  vm_initialization: Operation;
+  call: Operation;
+  mcpi: Operation;
+  ccp: Operation;
+  csiz: Operation;
+  ldc: Operation;
+  logd: Operation;
+  mcl: Operation;
+  mcli: Operation;
+  mcp: Operation;
+  meq: Operation;
+  retd: Operation;
+  smo: Operation;
+  srwq: Operation;
 }
 
 interface Consensus {
@@ -182,11 +150,39 @@ interface Consensus {
   };
 }
 
+interface ConsensusParameters {
+  tx_params: {
+    max_inputs: number;
+    max_outputs: number;
+    max_witnesses: number;
+    max_gas_per_tx: number;
+    max_size: number;
+  };
+  predicate_params: {
+    max_predicate_length: number;
+    max_predicate_data_length: number;
+    max_gas_per_predicate: number;
+    max_message_data_length: number;
+  };
+  script_params: {
+    max_script_length: number;
+    max_script_data_length: number;
+  };
+  contract_params: {
+    contract_max_size: number;
+    max_storage_slots: number;
+  };
+  fee_params: {
+    gas_price_factor: number;
+    gas_per_byte: number;
+  };
+}
+
 export interface ChainConfig {
   chain_name: string;
   block_gas_limit: number;
   initial_state: InitialState;
-  transaction_parameters: TransactionParameters;
+  consensus_parameters: ConsensusParameters;
   gas_costs: GasCosts;
   consensus: Consensus;
 }

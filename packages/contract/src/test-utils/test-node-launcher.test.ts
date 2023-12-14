@@ -97,7 +97,13 @@ describe('TestNodeLauncher', () => {
 
     const gasPrice = contract.provider.getGasConfig().minGasPrice;
 
-    const response = await contract.functions.test_function().txParams({ gasPrice }).call();
+    const response = await contract.functions
+      .test_function()
+      .txParams({
+        gasPrice,
+        gasLimit: 10_000,
+      })
+      .call();
     expect(response.value).toBe(true);
   });
 
@@ -112,7 +118,13 @@ describe('TestNodeLauncher', () => {
     } = launched;
     const gasPrice = contract.provider.getGasConfig().minGasPrice;
 
-    const response = await contract.functions.test_function().txParams({ gasPrice }).call();
+    const response = await contract.functions
+      .test_function()
+      .txParams({
+        gasPrice,
+        gasLimit: 10_000,
+      })
+      .call();
     expect(response.value).toBe(true);
     // #endregion deploy-contract
   });
@@ -136,10 +148,10 @@ describe('TestNodeLauncher', () => {
     const gasPrice = contract1.provider.getGasConfig().minGasPrice;
 
     const contract1Response = (
-      await contract1.functions.test_function().txParams({ gasPrice }).call()
+      await contract1.functions.test_function().txParams({ gasPrice, gasLimit: 10_000 }).call()
     ).value;
     const contract2Response = (
-      await contract2.functions.test_function().txParams({ gasPrice }).call()
+      await contract2.functions.test_function().txParams({ gasPrice, gasLimit: 10_000 }).call()
     ).value;
 
     expect(contract1Response).toBe(true);
@@ -207,8 +219,10 @@ describe('TestNodeLauncher', () => {
     await using launched = await TestNodeLauncher.launch({
       nodeOptions: {
         chainConfig: {
-          transaction_parameters: {
-            max_inputs,
+          consensus_parameters: {
+            tx_params: {
+              max_inputs,
+            },
           },
         },
       },

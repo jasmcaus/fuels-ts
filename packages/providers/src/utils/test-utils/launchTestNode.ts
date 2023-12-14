@@ -17,7 +17,7 @@ const defaultFuelCoreArgs = [
   '1',
   '--vm-backtrace',
   '--utxo-validation',
-  '--manual_blocks_enabled',
+  '--debug',
 ];
 
 export interface LaunchTestNodeOptions {
