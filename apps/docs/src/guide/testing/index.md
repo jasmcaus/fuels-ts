@@ -31,7 +31,7 @@ You can also configure wallets and deploy multiple contracts with them:
 
 #### Configuring the node
 
-The default chain config of `TestNodeLauncher` is the current beta network iteration's chain config. Click here to see what it looks like: [chainConfig.json](https://github.com/FuelLabs/fuels-ts/blob/master/.fuel-core/configs/chainConfig.json)
+The default chain config of `TestNodeLauncher` is the current beta network iteration's chain config. [Click here](https://github.com/FuelLabs/fuels-ts/blob/master/.fuel-core/configs/chainConfig.json) to see what it looks like.
 
 If you need a different base chain config, you can specify a `DEFAULT_CHAIN_CONFIG_PATH` environment variable which points to your chain config. `TestNodeLauncher` will read that config and work with it instead.
 
@@ -41,6 +41,6 @@ Besides the chain config, you can provide arguments to the `fuel-core` node via 
 
 If you want _all_ your tests to run with the same config, consider specifying the `DEFAULT_FUEL_CORE_ARGS` environment variable.
 
-_Note: these args will be overriden in a test if `nodeOptions.args` is provided._
+_Note: these args will be overridden in a test if `nodeOptions.args` is provided._
 
 <<< @/../../../packages/contract/src/test-utils/test-node-launcher.test.ts#custom-fuel-core-args{ts:line-numbers}
