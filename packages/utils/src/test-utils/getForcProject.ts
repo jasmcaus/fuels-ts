@@ -1,7 +1,8 @@
-import { hexlify } from 'ethers';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
+import { arrayify } from '../utils/arrayify';
+import { hexlify } from '../utils/hexlify';
 import { normalizeString } from '../utils/normalizeString';
 
 interface IGetForcProjectParams {
@@ -48,7 +49,7 @@ export const getForcProject = <T = unknown>(params: IGetForcProjectParams) => {
   const debugDir = getProjectDebugDir(params);
   const tempDir = getProjectTempDir(params);
   const binPath = getProjectBinPath(params);
-  const binHexlified = hexlify(readFileSync(binPath));
+  const binHexlified = hexlify(Uint8Array.from(readFileSync(binPath)));
   const abiPath = getProjectAbiPath(params);
   const abiName = getProjectAbiName(params);
   const abiContents: T = getProjectAbi(params);

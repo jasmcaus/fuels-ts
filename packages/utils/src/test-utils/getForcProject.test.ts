@@ -1,4 +1,3 @@
-import * as ethers from 'ethers';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -127,7 +126,6 @@ describe('getForcProject', () => {
     const fakeAbiContent = { contracts: {} };
     const fakeStorageSlots = [{ key: 'key1', value: 'value1' }];
 
-    jest.spyOn(ethers, 'hexlify').mockImplementation((param) => param as string);
     jest.spyOn(path, 'join').mockImplementation((...segments) => segments.join('/'));
     jest.spyOn(fs, 'readFileSync').mockImplementation((pathParam) => {
       if ((<string>pathParam).endsWith('.bin')) {
