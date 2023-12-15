@@ -597,6 +597,9 @@ importers:
       '@fuel-ts/errors':
         specifier: workspace:*
         version: link:../errors
+      '@fuel-ts/utils':
+        specifier: workspace:*
+        version: link:../utils
       ethereum-cryptography:
         specifier: ^2.1.2
         version: 2.1.2
@@ -816,6 +819,10 @@ importers:
       ethers:
         specifier: ^6.7.1
         version: 6.7.1
+    devDependencies:
+      '@fuel-ts/utils':
+        specifier: workspace:^
+        version: link:../utils
 
   packages/interfaces: {}
 

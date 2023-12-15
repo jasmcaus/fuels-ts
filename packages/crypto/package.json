@@ -30,6 +30,7 @@
   "dependencies": {
     "ethereum-cryptography": "^2.1.2",
     "ethers": "^6.7.1",
+    "@fuel-ts/utils": "workspace:*",
     "@fuel-ts/errors": "workspace:*"
   }
 }
