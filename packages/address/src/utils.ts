@@ -11,7 +11,7 @@ import type {
 } from '@fuel-ts/interfaces';
 import type { Decoded } from 'bech32';
 import { bech32m } from 'bech32';
-import { getBytesCopy, hexlify } from 'ethers';
+import { arrayify, hexlify } from '@fuel-ts/utils';
 import type { BytesLike } from 'ethers';
 
 /**
@@ -38,7 +38,7 @@ export function fromBech32(address: Bech32Address): Decoded {
 export function toBech32(address: B256Address): Bech32Address {
   return bech32m.encode(
     FUEL_BECH32_HRP_PREFIX,
-    bech32m.toWords(getBytesCopy(hexlify(address)))
+    bech32m.toWords(arrayify(hexlify(address)))
   ) as Bech32Address;
 }
 

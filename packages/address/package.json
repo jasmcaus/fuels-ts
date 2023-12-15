@@ -41,6 +41,7 @@
     "@fuel-ts/errors": "workspace:*",
     "@fuel-ts/interfaces": "workspace:*",
     "@fuel-ts/versions": "workspace:*",
+    "@fuel-ts/utils": "workspace:*",
     "bech32": "^2.0.0",
     "ethers": "^6.7.1"
   }

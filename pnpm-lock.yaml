@@ -533,6 +533,9 @@ importers:
       '@fuel-ts/interfaces':
         specifier: workspace:*
         version: link:../interfaces
+      '@fuel-ts/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@fuel-ts/versions':
         specifier: workspace:*
         version: link:../versions
