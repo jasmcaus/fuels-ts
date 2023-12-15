@@ -6,8 +6,9 @@ import { Contract } from '@fuel-ts/program';
 import type { CreateTransactionRequestLike, Provider } from '@fuel-ts/providers';
 import { CreateTransactionRequest } from '@fuel-ts/providers';
 import type { StorageSlot } from '@fuel-ts/transactions';
+import { arrayify } from '@fuel-ts/utils';
 import type { Account } from '@fuel-ts/wallet';
-import { getBytesCopy, type BytesLike } from 'ethers';
+import { type BytesLike } from 'ethers';
 
 import { getContractId, getContractStorageRoot, hexlifyWithPrefix } from './util';
 
@@ -43,7 +44,7 @@ export default class ContractFactory {
     accountOrProvider: Account | Provider | null = null
   ) {
     // Force the bytecode to be a byte array
-    this.bytecode = getBytesCopy(bytecode);
+    this.bytecode = arrayify(bytecode);
 
     if (abi instanceof Interface) {
       this.interface = abi;
@@ -180,7 +181,7 @@ export default class ContractFactory {
 
         const encoded = this.interface.encodeConfigurable(key, value as InputValue);
 
-        const bytes = getBytesCopy(this.bytecode);
+        const bytes = arrayify(this.bytecode);
 
         bytes.set(encoded, offset);
 
