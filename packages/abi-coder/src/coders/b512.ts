@@ -1,6 +1,6 @@
 import { ErrorCode } from '@fuel-ts/errors';
 import { bn, toHex } from '@fuel-ts/math';
-import { getBytesCopy } from 'ethers';
+import { arrayify } from '@fuel-ts/utils';
 
 import { Coder } from './abstract-coder';
 
@@ -12,7 +12,7 @@ export class B512Coder extends Coder<string, string> {
   encode(value: string): Uint8Array {
     let encodedValue;
     try {
-      encodedValue = getBytesCopy(value);
+      encodedValue = arrayify(value);
     } catch (error) {
       this.throwError(ErrorCode.ENCODE_ERROR, `Invalid ${this.type}.`);
     }
