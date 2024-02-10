@@ -1,10 +1,13 @@
 import { execSync } from 'child_process';
-import fs from 'fs/promises';
-import path, { join, dirname } from 'path';
+import { cpSync, mkdirSync, rmSync, readFileSync, writeFileSync, existsSync } from 'fs';
+import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const __dirname = dirname(fileURLToPath(import.meta.url));
+
+export const forcBinDirPath = join(__dirname, '..', 'forc-binaries');
+export const binPath = join(forcBinDirPath, 'forc');
 
 const platforms = {
   darwin: {
@@ -17,13 +20,13 @@ const platforms = {
   },
 };
 
-const binPath = join(__dirname, '../forc-binaries/forc');
-
-export default binPath;
-
 export const getPkgPlatform = () => {
   if (process.platform !== 'darwin' && process.platform !== 'linux') {
-    throw new Error(`Unsupported platform ${process.platform}`);
+    throw new Error(
+      `Unsupported platform ${process.platform}.${
+        process.platform === 'win32' ? ' If you are on Windows, please use WSL.' : ''
+      }}`
+    );
   }
   if (process.arch !== 'arm64' && process.arch !== 'x64') {
     throw new Error(`Unsupported arch ${process.arch}`);
@@ -31,16 +34,16 @@ export const getPkgPlatform = () => {
   return platforms[process.platform][process.arch];
 };
 
-const versionFilePath = path.join(__dirname, '../VERSION');
+const versionFilePath = join(__dirname, '../VERSION');
 
-export const getCurrentVersion = async () => {
-  const versionContents = await fs.readFile(versionFilePath, 'utf8');
+export const getCurrentVersion = () => {
+  const versionContents = readFileSync(versionFilePath, 'utf8');
   const forcVersion = versionContents.match(/^.+$/m)?.[0] || versionContents;
   return forcVersion;
 };
 
-export const setCurrentVersion = async (version) => {
-  await fs.writeFile(versionFilePath, version);
+export const setCurrentVersion = (version) => {
+  writeFileSync(versionFilePath, version);
 };
 
 export const isGitBranch = (versionFileContents) => versionFileContents.indexOf('git:') !== -1;
@@ -48,18 +51,29 @@ export const isGitBranch = (versionFileContents) => versionFileContents.indexOf(
 const swayRepoUrl = 'https://github.com/fuellabs/sway.git';
 
 export const buildFromGitBranch = (branchName) => {
-  execSync('rm -rf sway-repo');
-  execSync('rm -rf forc-binaries');
-  execSync(`git clone --branch ${branchName} ${swayRepoUrl} sway-repo`);
-  execSync(`cd sway-repo && cargo build`);
-  execSync('mkdir forc-binaries');
-  execSync('cp sway-repo/target/debug/forc forc-binaries/');
-  execSync('cp sway-repo/target/debug/forc-deploy forc-binaries/');
-  execSync('cp sway-repo/target/debug/forc-doc forc-binaries/');
-  execSync('cp sway-repo/target/debug/forc-fmt forc-binaries/');
-  execSync('cp sway-repo/target/debug/forc-lsp forc-binaries/');
-  execSync('cp sway-repo/target/debug/forc-run forc-binaries/');
-  execSync('cp sway-repo/target/debug/forc-submit forc-binaries/');
-  execSync('cp sway-repo/target/debug/forc-tx forc-binaries/');
-  execSync(`rm -rf sway-repo`);
+  const swayRepoDir = join(__dirname, '..', 'sway-repo');
+  const swayRepoDebugDir = join(swayRepoDir, 'target', 'debug');
+  const stdioOpts = { stdio: 'inherit' };
+
+  if (existsSync(swayRepoDir)) {
+    execSync(`cd ${swayRepoDir} && git fetch origin && git checkout ${branchName}`, stdioOpts);
+    execSync(`cd ${swayRepoDir} && cargo build`, stdioOpts);
+  } else {
+    execSync(`git clone --branch ${branchName} ${swayRepoUrl} ${swayRepoDir}`, stdioOpts);
+    execSync(`cd ${swayRepoDir} && cargo build`, stdioOpts);
+  }
+
+  const [from, to] = [swayRepoDebugDir, forcBinDirPath];
+
+  rmSync(to, { recursive: true, force: true });
+  mkdirSync(to, { recursive: true });
+
+  cpSync(join(from, 'forc'), join(to, 'forc'));
+  cpSync(join(from, 'forc-deploy'), join(to, 'forc-deploy'));
+  cpSync(join(from, 'forc-doc'), join(to, 'forc-doc'));
+  cpSync(join(from, 'forc-fmt'), join(to, 'forc-fmt'));
+  cpSync(join(from, 'forc-lsp'), join(to, 'forc-lsp'));
+  cpSync(join(from, 'forc-run'), join(to, 'forc-run'));
+  cpSync(join(from, 'forc-submit'), join(to, 'forc-submit'));
+  cpSync(join(from, 'forc-tx'), join(to, 'forc-tx'));
 };

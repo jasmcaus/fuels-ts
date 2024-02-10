@@ -1,4 +1,4 @@
-import { generateTestWallet } from '@fuel-ts/wallet/test-utils';
+import { generateTestWallet } from '@fuel-ts/account/test-utils';
 import type {
   WalletUnlocked,
   TransactionResultReceipt,
@@ -19,6 +19,9 @@ import {
   Wallet,
 } from 'fuels';
 
+/**
+ * @group node
+ */
 describe('TransactionSummary', () => {
   let provider: Provider;
   let wallet: WalletUnlocked;

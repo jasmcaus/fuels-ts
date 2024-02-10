@@ -79,6 +79,11 @@ export default defineConfig({
             ],
           },
           {
+            text: 'Quickstart',
+            link: '/guide/quickstart/',
+            collapsed: true,
+          },
+          {
             text: 'Types',
             link: '/guide/types/',
             collapsed: true,
@@ -224,12 +229,16 @@ export default defineConfig({
                 link: '/guide/providers/connection',
               },
               {
-                text: 'Connecting to an External Node',
-                link: '/guide/providers/connecting-to-an-external-node',
+                text: 'Connecting to Testnet',
+                link: '/guide/providers/connecting-to-testnet',
               },
               {
                 text: 'Querying the Chain',
                 link: '/guide/providers/querying-the-chain',
+              },
+              {
+                text: 'Retrying calls',
+                link: '/guide/providers/retrying-calls',
               },
             ],
           },
@@ -386,8 +395,8 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
-                text: 'Testing with Jest',
-                link: '/guide/testing/testing-with-jest',
+                text: 'Testing in TS',
+                link: '/guide/testing/testing-in-ts',
               },
               {
                 text: 'Tweaking the Blockchain',

@@ -5,6 +5,9 @@ import { join } from 'path';
 import { DocSnippetProjectsEnum } from '../../../test/fixtures/forc-projects';
 import { getTestWallet } from '../../utils';
 
+/**
+ * @group node
+ */
 describe(__filename, () => {
   let PRIVATE_KEY: string;
   let projectsPath: string;
@@ -47,10 +50,7 @@ describe(__filename, () => {
     // #endregion contract-setup-3
 
     // #region contract-setup-4
-    const { value } = await contract.functions
-      .echo_u8(15)
-      .txParams({ gasLimit: 10_000 })
-      .simulate();
+    const { value } = await contract.functions.echo_u8(15).simulate();
 
     expect(value).toBe(15);
     // #endregion contract-setup-4

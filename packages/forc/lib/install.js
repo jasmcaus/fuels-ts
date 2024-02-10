@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from 'child_process';
+import { error } from 'console';
 import { existsSync, rmSync, writeFileSync } from 'fs';
 import fetch from 'node-fetch';
 import { join } from 'path';
@@ -14,19 +15,11 @@ import {
   // eslint-disable-next-line import/extensions
 } from './shared.js';
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
   const { info } = console;
 
   const pkgPlatform = getPkgPlatform();
   const forcVersion = await getCurrentVersion();
-
-  // If a git branch is specified in the VERSION file, build from that branch
-  if (isGitBranch(forcVersion)) {
-    const branchName = forcVersion.split(':')[1];
-    buildFromGitBranch(branchName);
-    return;
-  }
 
   const pkgName = `forc-binaries-${pkgPlatform}.tar.gz`;
   const pkgUrl = `https://github.com/FuelLabs/sway/releases/download/v${forcVersion}/${pkgName}`;
@@ -35,6 +28,7 @@ import {
   const binDir = join(__dirname, '../');
 
   const binPath = join(binDir, 'forc-binaries', 'forc');
+
   let versionMatches = false;
 
   if (existsSync(binPath)) {
@@ -42,20 +36,38 @@ import {
     const binVersion = binRawVersion.match(/([.0-9]+)/)?.[0];
 
     versionMatches = binVersion === forcVersion;
-    info({ expected: forcVersion, received: binVersion });
+    info({
+      expected: forcVersion,
+      received: binVersion,
+      isGitBranch: isGitBranch(forcVersion),
+    });
   }
 
   if (versionMatches) {
     info(`Forc binary already installed, skipping.`);
   } else {
-    // Download
+    // If a git branch is specified in the VERSION file, build from that branch
+    if (isGitBranch(forcVersion)) {
+      const branchName = forcVersion.split(':')[1];
+      buildFromGitBranch(branchName);
+      return;
+    }
+
+    const stdioOpts = { stdio: 'inherit' };
+
+    // Otherwise, download
     const buf = await fetch(pkgUrl).then((r) => r.buffer());
-    await writeFileSync(pkgPath, buf);
+
+    if (/not found/i.test(buf.toString())) {
+      throw new Error(`Version '${forcVersion}' not found\n    at ${pkgUrl}`);
+    }
+
+    writeFileSync(pkgPath, buf);
 
     // Extract
-    execSync(`tar xzf "${pkgPath}" -C "${binDir}"`);
+    execSync(`tar xzf "${pkgPath}" -C "${binDir}"`, stdioOpts);
 
     // Cleanup
-    await rmSync(pkgPath);
+    rmSync(pkgPath);
   }
-})().catch(process.stderr.write);
+})().catch((e) => error(e));

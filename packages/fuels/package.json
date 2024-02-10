@@ -1,6 +1,6 @@
 {
   "name": "fuels",
-  "version": "0.69.1",
+  "version": "0.73.0",
   "description": "Fuel TS SDK",
   "author": "Fuel Labs <contact@fuel.sh> (https://fuel.network/)",
   "bin": {
@@ -10,7 +10,7 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "engines": {
-    "node": "^18.14.1"
+    "node": "^18.18.2 || ^20.0.0"
   },
   "exports": {
     ".": {
@@ -35,7 +35,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && pnpm vite build",
     "postbuild": "tsc --emitDeclarationOnly -p tsconfig.dts.json",
     "prepublishOnly": "cp ../../README.md ./README.md"
   },
@@ -50,22 +50,15 @@
     "@fuel-ts/forc": "workspace:*",
     "@fuel-ts/fuel-core": "workspace:*",
     "@fuel-ts/hasher": "workspace:*",
-    "@fuel-ts/hdwallet": "workspace:*",
     "@fuel-ts/interfaces": "workspace:*",
     "@fuel-ts/math": "workspace:*",
     "@fuel-ts/merkle": "workspace:*",
-    "@fuel-ts/mnemonic": "workspace:*",
-    "@fuel-ts/predicate": "workspace:*",
     "@fuel-ts/program": "workspace:*",
-    "@fuel-ts/providers": "workspace:*",
     "@fuel-ts/script": "workspace:*",
-    "@fuel-ts/signer": "workspace:*",
     "@fuel-ts/transactions": "workspace:*",
     "@fuel-ts/utils": "workspace:*",
     "@fuel-ts/versions": "workspace:*",
-    "@fuel-ts/wallet": "workspace:*",
-    "@fuel-ts/wallet-manager": "workspace:*",
-    "@fuel-ts/wordlists": "workspace:*",
+    "@fuel-ts/account": "workspace:*",
     "bundle-require": "^4.0.1",
     "chalk": "4",
     "chokidar": "^3.5.3",
@@ -76,7 +69,6 @@
     "handlebars": "^4.7.7",
     "joycon": "^3.1.1",
     "lodash.camelcase": "^4.3.0",
-    "npm-which": "^3.0.1",
     "portfinder": "^1.0.32",
     "rimraf": "^3.0.2",
     "toml": "^3.0.0",
@@ -85,7 +77,8 @@
   },
   "devDependencies": {
     "@types/lodash.camelcase": "^4.3.7",
-    "@types/rimraf": "^3.0.2"
+    "@types/rimraf": "^3.0.2",
+    "vite": "^4.3.9"
   },
   "keywords": [
     "ethereum",

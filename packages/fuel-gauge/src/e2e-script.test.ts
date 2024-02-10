@@ -73,6 +73,10 @@ type MainArgs = [
   VecInAStructInAVec, // VEC_IN_A_VEC_IN_A_STRUCT_IN_A_VEC
 ];
 
+/**
+ * @group node
+ * @group e2e
+ */
 describe('Live Script Test', () => {
   it('can use script against live Fuel Node', async () => {
     if (!process.env.FUEL_NETWORK_GENESIS_KEY) {
@@ -86,33 +90,29 @@ describe('Live Script Test', () => {
 
     let output: BN = bn(0);
     try {
-      const { value } = await scriptInstance.functions
-        .main(
-          U32_VEC,
-          VEC_IN_VEC,
-          STRUCT_IN_VEC,
-          VEC_IN_STRUCT,
-          ARRAY_IN_VEC,
-          VEC_IN_ARRAY,
-          VEC_IN_ENUM,
-          ENUM_IN_VEC,
-          TUPLE_IN_VEC,
-          VEC_IN_TUPLE,
-          VEC_IN_A_VEC_IN_A_STRUCT_IN_A_VEC
-        )
-        .txParams({
-          gasPrice: 1,
-        })
-        .call();
+      const callScope = scriptInstance.functions.main(
+        U32_VEC,
+        VEC_IN_VEC,
+        STRUCT_IN_VEC,
+        VEC_IN_STRUCT,
+        ARRAY_IN_VEC,
+        VEC_IN_ARRAY,
+        VEC_IN_ENUM,
+        ENUM_IN_VEC,
+        TUPLE_IN_VEC,
+        VEC_IN_TUPLE,
+        VEC_IN_A_VEC_IN_A_STRUCT_IN_A_VEC
+      );
+
+      const { value } = await callScope.call();
 
       output = value;
     } catch (e) {
       console.error((e as Error).message);
       console.warn(`
         not enough coins to fit the target?
-        
-        - add assets: https://faucet-beta-4.fuel.network/
-        - check balance: https://fuellabs.github.io/block-explorer-v2/beta-4/#/address/fuel1nknjglsav0fs6603xmc0se2waq6qxck8sk6s7znq2y78akl4hd7qpwlm8m
+        - add assets: https://faucet-beta-5.fuel.network/
+        - check balance: https://fuellabs.github.io/block-explorer-v2/beta-5/#/address/fuel1nknjglsav0fs6603xmc0se2waq6qxck8sk6s7znq2y78akl4hd7qpwlm8m
         - bech32 address: fuel1nknjglsav0fs6603xmc0se2waq6qxck8sk6s7znq2y78akl4hd7qpwlm8m
         `);
     }

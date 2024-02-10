@@ -1,7 +1,7 @@
 <script setup>
   import { data } from './versions.data'
   const { forc, fuels, fuelCore } = data
-  const url = `https://fuellabs.github.io/sway/v${forc}/book/forc/index.html`
+  const url = `https://docs.fuel.network/docs/forc/`
   const logoSrc = './fuel-logo.png'
 </script>
 
@@ -15,7 +15,7 @@ Please visit the Fuel's [installation guide](https://docs.fuel.network/guides/in
 
 ## Developer Quickstart Guide
 
-We recommend starting with the [Developer Quickstart](https://fuellabs.github.io/fuel-docs/master/quickstart/developer-quickstart.html) for a walk through on building your first DApp on Fuel.
+We recommend starting with the [Developer Quickstart](https://docs.fuel.network/docs/intro/quickstart-contract/) for a walk through on building your first DApp on Fuel.
 
 - [Guide](./guide/)
 - [Sample Application](https://github.com/FuelLabs/beta2-quickstart)
@@ -25,7 +25,7 @@ We recommend starting with the [Developer Quickstart](https://fuellabs.github.io
 
 Learn more about the Fuel Ecosystem.
 
-- [🌴 Sway](https://fuellabs.github.io/sway/) the new language. Empowering everyone to build reliable and efficient smart contracts.
+- [🌴 Sway](https://docs.fuel.network/docs/sway/) the new language. Empowering everyone to build reliable and efficient smart contracts.
 - <a :href="url" target="_blank" rel="noreferrer">🧰 Forc</a> the Fuel toolbox. Build, deploy and manage your sway projects.
 - [⚙️ Fuel Core](https://github.com/FuelLabs/fuel-core) the new FuelVM, a blazingly fast blockchain VM.
 - [🔗 Fuel Specs](https://github.com/FuelLabs/fuel-specs) the Fuel protocol specifications.
@@ -45,6 +45,8 @@ npm install fuels --save
 ```
 
 :::
+
+> If you are a Windows user, you will need to be running Windows Subsystem for Linux (WSL) to install and use the Fuel toolchain, including the TypeScript SDK. We don't support Windows natively at this time.
 
 ## Import
 
@@ -68,7 +70,7 @@ console.log(Wallet.fromPrivateKey(PRIVATE_KEY));
 import { Provider, Wallet, Contract, BigNumberish, BN } from "fuels";
 import abi from "./abi.json";
 
-const provider = await Provider.create('https://beta-4.fuel.network/graphql');
+const provider = await Provider.create('https://beta-5.fuel.network/graphql');
 const wallet = Wallet.fromPrivateKey(PRIVATE_KEY, provider); // private key with coins
 const contractId = "0x...";
 const contract = new Contract(contractId, abi, wallet);
