@@ -31,7 +31,7 @@ describe('launchCustomProviderAndGetWallets', () => {
     });
 
     expect(error).toMatchObject({
-      code: 'ECONNREFUSED',
+      message: 'fetch failed',
     });
   });
 

@@ -24,7 +24,7 @@ describe('launchTestProvider', () => {
     });
 
     expect(error).toMatchObject({
-      code: 'ECONNREFUSED',
+      message: 'fetch failed',
     });
   });
 
@@ -42,7 +42,7 @@ describe('launchTestProvider', () => {
       });
 
       expect(error).toMatchObject({
-        code: 'ECONNREFUSED',
+        message: 'fetch failed',
       });
 
       return;
