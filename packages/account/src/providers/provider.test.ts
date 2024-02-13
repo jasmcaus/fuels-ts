@@ -10,21 +10,15 @@ import { versions } from '@fuel-ts/versions';
 import * as fuelTsVersionsMod from '@fuel-ts/versions';
 import { getBytesCopy, hexlify, type BytesLike } from 'ethers';
 
-<<<<<<< HEAD:packages/providers/test/provider.test.ts
-import type { GqlGetCoinsToSpendQuery } from '../src/__generated__/operations';
-import type { TransactionCost } from '../src/provider';
-import Provider from '../src/provider';
-import { setupTestProvider } from '../src/test-utils';
-=======
 import {
   messageStatusResponse,
   MESSAGE_PROOF_RAW_RESPONSE,
   MESSAGE_PROOF,
 } from '../../test/fixtures';
 
-import type { ChainInfo, FetchRequestOptions, NodeInfo, TransactionCost } from './provider';
+import type { FetchRequestOptions, ChainInfo, NodeInfo, TransactionCost } from './provider';
 import Provider from './provider';
->>>>>>> master:packages/account/src/providers/provider.test.ts
+import { setupTestProvider } from './test-utils';
 import type {
   CoinTransactionRequestInput,
   MessageTransactionRequestInput,
@@ -192,7 +186,7 @@ describe('Provider', () => {
   it('can get all chain info', async () => {
     // #region provider-definition
     await using provider = await setupTestProvider();
-    const { consensusParameters } = await provider.getChain();
+    const { consensusParameters } = provider.getChain();
     // #endregion provider-definition
 
     expect(consensusParameters.contractMaxSize).toBeDefined();
@@ -520,17 +514,9 @@ describe('Provider', () => {
     expect(EXCLUDED.map((value) => hexlify(value))).toStrictEqual(EXPECTED);
 
     const owner = Address.fromRandom();
-<<<<<<< HEAD:packages/providers/test/provider.test.ts
-    const resourcesToSpendMock = jest.fn(() =>
-      Promise.resolve<GqlGetCoinsToSpendQuery>({
-        coinsToSpend: [],
-      } as unknown as GqlGetCoinsToSpendQuery)
-    );
-=======
     const resourcesToSpendMock = vi.fn(() =>
       Promise.resolve({ coinsToSpend: [] })
     ) as unknown as typeof provider.operations.getCoinsToSpend;
->>>>>>> master:packages/account/src/providers/provider.test.ts
     provider.operations.getCoinsToSpend = resourcesToSpendMock;
     await provider.getResourcesToSpend(owner, []);
 
@@ -658,17 +644,9 @@ describe('Provider', () => {
     expect(EXCLUDED.map((value) => hexlify(value))).toStrictEqual(EXPECTED);
 
     const owner = Address.fromRandom();
-<<<<<<< HEAD:packages/providers/test/provider.test.ts
-    const resourcesToSpendMock = jest.fn(() =>
-      Promise.resolve<GqlGetCoinsToSpendQuery>({
-        coinsToSpend: [],
-      } as unknown as GqlGetCoinsToSpendQuery)
-    );
-=======
     const resourcesToSpendMock = vi.fn(() =>
       Promise.resolve({ coinsToSpend: [] })
     ) as unknown as typeof provider.operations.getCoinsToSpend;
->>>>>>> master:packages/account/src/providers/provider.test.ts
     provider.operations.getCoinsToSpend = resourcesToSpendMock;
     await provider.getResourcesToSpend(owner, [], {
       utxos: [

@@ -1,8 +1,7 @@
-import type { Provider } from '@fuel-ts/providers';
-import { setupTestProvider } from '@fuel-ts/providers/test-utils';
-import type { SetupTestProviderOptions } from '@fuel-ts/providers/test-utils';
-
-import type { WalletUnlocked } from '../wallets';
+import type { Provider } from '../providers';
+import type { SetupTestProviderOptions } from '../providers/test-utils';
+import { setupTestProvider } from '../providers/test-utils';
+import type { WalletUnlocked } from '../wallet';
 
 import { WalletConfig } from './wallet-config';
 

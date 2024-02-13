@@ -22,7 +22,9 @@ async function nodeIsRunning(url: string): Promise<boolean> {
 }
 
 describe('launchNode', () => {
-  afterAll(() => jest.clearAllMocks());
+  afterAll(() => {
+    vi.clearAllMocks();
+  });
 
   it('throws an error if the node fails to start due to bad input', async () => {
     await expectToThrowFuelError(
@@ -65,7 +67,7 @@ describe('launchNode', () => {
   });
 
   it('creates a temporary config file on launch and deletes it on cleanup', async () => {
-    const fsSpy = jest.spyOn(fsAsync, 'writeFile');
+    const fsSpy = vi.spyOn(fsAsync, 'writeFile');
 
     const { cleanup } = await launchTestNode();
 

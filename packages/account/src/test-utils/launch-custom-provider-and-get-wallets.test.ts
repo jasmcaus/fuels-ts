@@ -1,10 +1,10 @@
 import { BaseAssetId } from '@fuel-ts/address/configs';
 import { safeExec } from '@fuel-ts/errors/test-utils';
 import { toHex, toNumber } from '@fuel-ts/math';
-import { Provider } from '@fuel-ts/providers';
-import { Signer } from '@fuel-ts/signer';
 
-import { WalletUnlocked } from '../wallets';
+import { Provider } from '../providers';
+import { Signer } from '../signer';
+import { WalletUnlocked } from '../wallet';
 
 import { AssetId } from './asset-id';
 import { launchCustomProviderAndGetWallets } from './launch-custom-provider-and-get-wallets';

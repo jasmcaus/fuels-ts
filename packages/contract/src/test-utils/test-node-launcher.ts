@@ -1,12 +1,13 @@
 import type { JsonAbi } from '@fuel-ts/abi-coder';
+import type { Provider, WalletUnlocked } from '@fuel-ts/account';
+import { launchCustomProviderAndGetWallets } from '@fuel-ts/account/test-utils';
+import type {
+  ChainConfig,
+  LaunchCustomProviderAndGetWalletsOptions,
+} from '@fuel-ts/account/test-utils';
 import { FuelError } from '@fuel-ts/errors';
 import type { Contract } from '@fuel-ts/program';
-import type { Provider } from '@fuel-ts/providers';
-import type { ChainConfig } from '@fuel-ts/providers/test-utils';
 import { getForcProject } from '@fuel-ts/utils/test-utils';
-import type { WalletUnlocked } from '@fuel-ts/wallet';
-import type { LaunchCustomProviderAndGetWalletsOptions } from '@fuel-ts/wallet/test-utils';
-import { launchCustomProviderAndGetWallets } from '@fuel-ts/wallet/test-utils';
 import { readFileSync } from 'fs';
 import { mergeDeepRight } from 'ramda';
 

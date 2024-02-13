@@ -34,7 +34,7 @@ class FuelSubscriptionStream implements TransformStream {
               new FuelError(
                 FuelError.CODES.INVALID_REQUEST,
                 errors.map((err) => err.message).join('\n\n')
-              )
+              ) as FuelError & ArrayBufferView
             );
           } else {
             this.readableStreamController.enqueue(data);

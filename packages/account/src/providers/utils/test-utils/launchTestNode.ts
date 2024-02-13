@@ -34,7 +34,7 @@ export interface LaunchTestNodeOptions {
   logger: (text: string) => void;
 }
 
-export type LaunchNodeResult = Promise<{
+export type LaunchTestNodeResult = Promise<{
   cleanup: () => Promise<void>;
   url: string;
 }>;
@@ -53,7 +53,7 @@ export const launchTestNode = async ({
   useSystemFuelCore = false,
   chainConfig = defaultChainConfig,
   logger,
-}: Partial<LaunchTestNodeOptions> = {}): LaunchNodeResult =>
+}: Partial<LaunchTestNodeOptions> = {}): LaunchTestNodeResult =>
   // eslint-disable-next-line no-async-promise-executor
   new Promise(async (resolve, reject) => {
     const command = useSystemFuelCore ? 'fuel-core' : './node_modules/.bin/fuels-core';
@@ -127,11 +127,15 @@ export const launchTestNode = async ({
       }
 
       if (chunk.indexOf(graphQLStartSubstring) !== -1) {
-        const [nodeIp, nodePort] = chunk.split(' ').at(-1)!.trim().split(':');
+        const rows = chunk.split('\n');
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const rowWithUrl = rows.find((row) => row.indexOf(graphQLStartSubstring) !== -1)!;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const url = rowWithUrl.split(' ').at(-1)!.trim(); // e.g. "2024-02-13T12:31:44.445844Z  INFO new{name=fuel-core}: fuel_core::graphql_api::service: 216: Binding GraphQL provider to 127.0.0.1:35039"
 
         resolve({
           cleanup,
-          url: `http://${nodeIp}:${nodePort}/graphql`,
+          url: `http://${url}/graphql`,
         });
       }
 

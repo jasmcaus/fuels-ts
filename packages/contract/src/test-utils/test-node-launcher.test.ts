@@ -1,8 +1,8 @@
+import { Provider } from '@fuel-ts/account';
+import { WalletConfig } from '@fuel-ts/account/test-utils';
+import type { ChainConfig } from '@fuel-ts/account/test-utils';
 import { FuelError } from '@fuel-ts/errors';
 import { expectToThrowFuelError, safeExec } from '@fuel-ts/errors/test-utils';
-import { Provider } from '@fuel-ts/providers';
-import type { ChainConfig } from '@fuel-ts/providers/test-utils';
-import { WalletConfig } from '@fuel-ts/wallet/test-utils';
 import { randomInt, randomUUID } from 'crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync } from 'fs';
 import { writeFile } from 'fs/promises';

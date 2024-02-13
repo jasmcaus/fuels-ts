@@ -1,10 +1,10 @@
 import { FuelError } from '@fuel-ts/errors';
 import { toHex } from '@fuel-ts/math';
-import type { ChainConfig } from '@fuel-ts/providers/test-utils';
 import { randomBytes } from 'crypto';
 import type { PartialDeep } from 'type-fest';
 
-import { WalletUnlocked } from '../wallets';
+import type { ChainConfig } from '../providers/test-utils';
+import { WalletUnlocked } from '../wallet';
 
 import { AssetId } from './asset-id';
 import type { TestMessage } from './test-message';
