@@ -16,9 +16,9 @@ import {
   MESSAGE_PROOF,
 } from '../../test/fixtures';
 
-import type { FetchRequestOptions, ChainInfo, NodeInfo, TransactionCost } from './provider';
+import type { ChainInfo, NodeInfo, TransactionCost } from './provider';
 import Provider from './provider';
-import { setupTestProvider } from './test-utils';
+import { launchTestNode, setupTestProvider } from './test-utils';
 import type {
   CoinTransactionRequestInput,
   MessageTransactionRequestInput,
@@ -206,30 +206,17 @@ describe('Provider', () => {
   });
 
   it('can change the provider url of the current instance', async () => {
-    const providerUrl1 = FUEL_NETWORK_URL;
-    const providerUrl2 = 'http://127.0.0.1:8080/graphql';
+    await using provider = await setupTestProvider();
 
-    const provider = await Provider.create(providerUrl1, {
-      fetch: (url: string, options: FetchRequestOptions) =>
-        getCustomFetch('getVersion', { nodeInfo: { nodeVersion: url } })(url, options),
-    });
+    const { cleanup, url } = await launchTestNode();
 
-    expect(provider.url).toBe(providerUrl1);
-    expect(await provider.getVersion()).toEqual(providerUrl1);
+    const spyFetchChainAndNodeInfo = vi.spyOn(Provider.prototype, 'fetchChainAndNodeInfo');
 
-    const spyFetchChainAndNodeInfo = vi
-      .spyOn(Provider.prototype, 'fetchChainAndNodeInfo')
-      .mockResolvedValue({
-        chain: {} as ChainInfo,
-        nodeInfo: {} as NodeInfo,
-      });
-
-    await provider.connect(providerUrl2);
-    expect(provider.url).toBe(providerUrl2);
-
-    expect(await provider.getVersion()).toEqual(providerUrl2);
+    await provider.connect(url);
+    expect(provider.url).toBe(url);
 
     expect(spyFetchChainAndNodeInfo).toHaveBeenCalledTimes(1);
+    await cleanup();
   });
 
   it('can accept a custom fetch function', async () => {
@@ -244,7 +231,8 @@ describe('Provider', () => {
   });
 
   it('can accept options override in connect method', async () => {
-    const providerUrl = FUEL_NETWORK_URL;
+    await using providerForUrl = await setupTestProvider();
+    const providerUrl = providerForUrl.url;
 
     /**
      * Mocking and initializing Provider with an invalid fetcher just
@@ -743,7 +731,7 @@ describe('Provider', () => {
   it('should cache chain and node info', async () => {
     Provider.clearChainAndNodeCaches();
 
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
 
     expect(provider.getChain()).toBeDefined();
     expect(provider.getNode()).toBeDefined();
@@ -756,7 +744,7 @@ describe('Provider', () => {
     const spyFetchChain = vi.spyOn(Provider.prototype, 'fetchChain');
     const spyFetchNode = vi.spyOn(Provider.prototype, 'fetchNode');
 
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
 
     expect(spyFetchChainAndNodeInfo).toHaveBeenCalledTimes(1);
     expect(spyFetchChain).toHaveBeenCalledTimes(1);
@@ -777,7 +765,7 @@ describe('Provider', () => {
     const spyFetchChain = vi.spyOn(Provider.prototype, 'fetchChain');
     const spyFetchNode = vi.spyOn(Provider.prototype, 'fetchNode');
 
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
 
     expect(spyFetchChainAndNodeInfo).toHaveBeenCalledTimes(1);
     expect(spyFetchChain).toHaveBeenCalledTimes(1);
@@ -791,7 +779,7 @@ describe('Provider', () => {
   });
 
   it('should ensure getGasConfig return essential gas related data', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
 
     const gasConfig = provider.getGasConfig();
 
@@ -803,7 +791,7 @@ describe('Provider', () => {
   });
 
   it('should throws when using getChain or getNode and without cached data', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
 
     Provider.clearChainAndNodeCaches();
 
@@ -875,7 +863,7 @@ describe('Provider', () => {
   });
 
   it('throws when gas limit is lower than tx gas used', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
     const gasLimit = 1;
     const gasUsed = bn(1000);
     const transactionCost: TransactionCost = {
@@ -910,7 +898,7 @@ describe('Provider', () => {
   });
 
   it('throws when gas price is lower than min tx gas price', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
     const gasPrice = 1;
     const minGasPrice = bn(1000);
     const transactionCost: TransactionCost = {
@@ -945,7 +933,7 @@ describe('Provider', () => {
   });
 
   it('An invalid subscription request throws a FuelError and does not hold the test runner (closes all handles)', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
 
     await expectToThrowFuelError(
       async () => {
@@ -968,13 +956,13 @@ describe('Provider', () => {
   });
 
   it('default timeout is undefined', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
     expect(provider.options.timeout).toBeUndefined();
   });
 
   it('throws TimeoutError on timeout when calling an operation', async () => {
     const timeout = 500;
-    const provider = await Provider.create(FUEL_NETWORK_URL, { timeout });
+    await using provider = await setupTestProvider({ providerOptions: { timeout } });
     vi.spyOn(global, 'fetch').mockImplementationOnce((...args: unknown[]) =>
       sleep(timeout).then(() =>
         fetch(args[0] as RequestInfo | URL, args[1] as RequestInit | undefined)
@@ -994,7 +982,7 @@ describe('Provider', () => {
 
   it('throws TimeoutError on timeout when calling a subscription', async () => {
     const timeout = 500;
-    const provider = await Provider.create(FUEL_NETWORK_URL, { timeout });
+    await using provider = await setupTestProvider({ providerOptions: { timeout } });
 
     vi.spyOn(global, 'fetch').mockImplementationOnce((...args: unknown[]) =>
       sleep(timeout).then(() =>
@@ -1017,7 +1005,7 @@ describe('Provider', () => {
     });
   });
   it('should ensure calculateMaxgas considers gasLimit for ScriptTransactionRequest', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
     const { gasPerByte } = provider.getGasConfig();
 
     const gasLimit = bn(1000);
@@ -1045,7 +1033,7 @@ describe('Provider', () => {
   });
 
   it('should ensure calculateMaxgas does NOT considers gasLimit for CreateTransactionRequest', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
     const { gasPerByte } = provider.getGasConfig();
 
     const transactionRequest = new CreateTransactionRequest({
@@ -1073,7 +1061,7 @@ describe('Provider', () => {
   });
 
   it('should ensure estimated fee values on getTransactionCost are never 0', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
 
     const request = new ScriptTransactionRequest();
 
@@ -1092,7 +1080,7 @@ describe('Provider', () => {
   });
 
   it('should accept string addresses in methods that require an address', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    await using provider = await setupTestProvider();
 
     const b256Str = Address.fromRandom().toB256();
 
