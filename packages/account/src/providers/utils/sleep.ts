@@ -7,7 +7,10 @@ export function sleep(time: number) {
   });
 }
 
-export async function sleepUntilTrue(fn: () => Promise<boolean>, time: number): Promise<void> {
+export async function sleepUntilTrue(
+  fn: () => Promise<boolean>,
+  time: number = 500
+): Promise<void> {
   const result = await fn();
   if (result) {
     return;

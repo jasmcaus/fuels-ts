@@ -101,7 +101,7 @@ describe('launchNode', () => {
     process.emit('exit', 0);
 
     // give time for cleanup to kill the node
-    await sleepUntilTrue(async () => !(await nodeIsRunning(url)), 500);
+    await sleepUntilTrue(async () => !(await nodeIsRunning(url)));
 
     expect(await nodeIsRunning(url)).toBe(false);
   });
@@ -111,7 +111,7 @@ describe('launchNode', () => {
 
     process.emit('SIGINT');
 
-    await sleepUntilTrue(async () => !(await nodeIsRunning(url)), 500);
+    await sleepUntilTrue(async () => !(await nodeIsRunning(url)));
 
     expect(await nodeIsRunning(url)).toBe(false);
   });
@@ -121,7 +121,7 @@ describe('launchNode', () => {
 
     process.emit('SIGUSR1');
 
-    await sleepUntilTrue(async () => !(await nodeIsRunning(url)), 500);
+    await sleepUntilTrue(async () => !(await nodeIsRunning(url)));
 
     expect(await nodeIsRunning(url)).toBe(false);
   });
@@ -131,17 +131,19 @@ describe('launchNode', () => {
 
     process.emit('SIGUSR2');
 
-    await sleepUntilTrue(async () => !(await nodeIsRunning(url)), 500);
+    await sleepUntilTrue(async () => !(await nodeIsRunning(url)));
 
     expect(await nodeIsRunning(url)).toBe(false);
   });
 
   it('kills node on event:uncaughtException', async () => {
-    const { url } = await launchTestNode();
+    const { cleanup, url } = await launchTestNode();
 
-    process.emit('uncaughtException', new Error());
-
-    await sleepUntilTrue(async () => !(await nodeIsRunning(url)), 500);
+    try {
+      process.emit('uncaughtException', new Error());
+    } catch (e) {
+      await sleepUntilTrue(async () => !(await nodeIsRunning(url)));
+    }
 
     expect(await nodeIsRunning(url)).toBe(false);
   });
