@@ -121,7 +121,7 @@ export const launchTestNode = async ({
     const graphQLStartSubstring = 'Binding GraphQL provider to';
 
     // Look for a specific graphql start point in the output.
-    child!.stderr.on('data', (chunk: string) => {
+    child?.stderr.on('data', (chunk: string) => {
       if (logger) {
         logger(chunk);
       }
