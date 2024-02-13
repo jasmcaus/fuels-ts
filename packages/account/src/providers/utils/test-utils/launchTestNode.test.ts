@@ -25,8 +25,8 @@ async function nodeIsRunning(url: string): Promise<boolean> {
  * @group node
  */
 describe('launchNode', () => {
-  afterAll(() => {
-    vi.clearAllMocks();
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('throws an error if the node fails to start due to bad input', async () => {
@@ -136,15 +136,14 @@ describe('launchNode', () => {
     expect(await nodeIsRunning(url)).toBe(false);
   });
 
-  it('kills node on event:uncaughtException', async () => {
-    const { cleanup, url } = await launchTestNode();
-
-    try {
-      process.emit('uncaughtException', new Error());
-    } catch (e) {
-      await sleepUntilTrue(async () => !(await nodeIsRunning(url)));
-    }
-
-    expect(await nodeIsRunning(url)).toBe(false);
+  /**
+   * Testing with process.emit('uncaughtException', new Error()) breaks vitest
+   * because it throws an uncaught exception and vitest doesn't handle it graciously.
+   * That's why this test only verifies that cleanup is registered as a listner for uncaughtException.
+   */
+  it('cleanup is registered as a listener of event:uncaughtException', async () => {
+    const { cleanup } = await launchTestNode();
+    const listeners = process.listeners('uncaughtException');
+    expect(listeners).toContain(cleanup);
   });
 });
