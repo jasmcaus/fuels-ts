@@ -5,6 +5,9 @@ import { Provider } from '../..';
 
 import { setupTestProvider } from './setup-test-provider';
 
+/**
+ * @group node
+ */
 describe('launchTestProvider', () => {
   it('kills the node after going out of scope', async () => {
     let url = '';

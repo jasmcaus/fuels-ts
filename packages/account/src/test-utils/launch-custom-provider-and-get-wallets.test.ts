@@ -11,6 +11,9 @@ import { launchCustomProviderAndGetWallets } from './launch-custom-provider-and-
 import { TestMessage } from './test-message';
 import { WalletConfig } from './wallet-config';
 
+/**
+ * @group node
+ */
 describe('launchCustomProviderAndGetWallets', () => {
   it('kills the node after going out of scope', async () => {
     let url = '';

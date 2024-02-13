@@ -18,6 +18,9 @@ type Wrapper = {
   inner_enum: SomeEnum;
 };
 
+/**
+ * @group node
+ */
 describe('Bytes Tests', () => {
   it('should test bytes output', async () => {
     await using launched = await TestNodeLauncher.launch({

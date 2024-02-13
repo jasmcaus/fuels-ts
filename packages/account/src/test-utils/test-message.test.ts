@@ -5,6 +5,9 @@ import { hexlify } from 'ethers';
 
 import { TestMessage } from './test-message';
 
+/**
+ * @group node
+ */
 describe('test-message', () => {
   test('has default values', () => {
     const message = new TestMessage().toChainMessage();

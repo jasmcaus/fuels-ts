@@ -4,6 +4,9 @@ import { expectToThrowFuelError } from '@fuel-ts/errors/test-utils';
 import { AssetId } from './asset-id';
 import { WalletConfig } from './wallet-config';
 
+/**
+ * @group node
+ */
 describe('WalletConfig', () => {
   it('throws on invalid number of wallets', async () => {
     await expectToThrowFuelError(

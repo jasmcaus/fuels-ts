@@ -21,6 +21,9 @@ async function nodeIsRunning(url: string): Promise<boolean> {
   });
 }
 
+/**
+ * @group node
+ */
 describe('launchNode', () => {
   afterAll(() => {
     vi.clearAllMocks();

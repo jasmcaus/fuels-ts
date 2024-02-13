@@ -36,6 +36,9 @@ async function generateChainConfigFile(chainName: string): Promise<[string, () =
   return [chainConfigPath, () => rmSync(tempDirPath, { recursive: true, force: true })];
 }
 
+/**
+ * @group node
+ */
 describe('TestNodeLauncher', () => {
   test('kills the node after going out of scope', async () => {
     let url = '';
