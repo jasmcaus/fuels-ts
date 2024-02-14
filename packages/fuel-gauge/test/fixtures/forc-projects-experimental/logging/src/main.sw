@@ -199,12 +199,12 @@ impl LoggingContract for Contract {
     }
 
     fn log_u8_u16_tuple(a: (u8, u16)) -> (u8, u16) {
-        // log(a);
+        log(a);
         a
     }
 
     fn log_boolean_u8_vec_tuple(a: (bool, Vec<u8>)) -> (bool, Vec<u8>) {
-        // log(a);
+        log(a);
         a
     }
 
