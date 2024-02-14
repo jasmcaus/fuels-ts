@@ -27,6 +27,11 @@ interface DeployContractConfig {
    * Options for contract deployment taken from `ContractFactory`.
    */
   options?: DeployContractOptions;
+  /**
+   * Used to specify the folder where the built binary is located.
+   * Default is `release`, which corresponds  to `contractDir/out/release`.
+   */
+  build?: Parameters<typeof getForcProject>[0]['build'];
 }
 
 interface TestNodeLauncherOptions extends LaunchCustomProviderAndGetWalletsOptions {
@@ -112,7 +117,8 @@ export class TestNodeLauncher {
       return TestNodeLauncher.prepareContractFactory(
         config.contractDir,
         config.options,
-        TestNodeLauncher.getWalletForDeployment(config, wallets)
+        TestNodeLauncher.getWalletForDeployment(config, wallets),
+        config.build
       );
     });
 
@@ -131,12 +137,14 @@ export class TestNodeLauncher {
   private static prepareContractFactory(
     contractDir: string,
     deployOptions: DeployContractConfig['options'],
-    wallet: WalletUnlocked
+    wallet: WalletUnlocked,
+    build: DeployContractConfig['build'] = 'release'
   ) {
     const contractDirPathElements = contractDir.split('/');
     const { abiContents, binHexlified, storageSlots } = getForcProject<JsonAbi>({
       projectDir: contractDir,
       projectName: contractDirPathElements[contractDirPathElements.length - 1],
+      build,
     });
 
     const factory = new ContractFactory(binHexlified, abiContents, wallet);
