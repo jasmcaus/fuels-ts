@@ -1,5 +1,11 @@
 # @fuel-ts/errors
 
+## 0.75.0
+
+### Patch Changes
+
+- exports InvocationCallResult, by [@Torres-ssf](https://github.com/Torres-ssf) (See [#1765](https://github.com/FuelLabs/fuels-ts/pull/1765))
+
 ## 0.74.0
 
 ### Minor Changes

@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.75.0
+
+### Minor Changes
+
+- - For a contract call, reduced the number of dry run calls before the call from 4 to 1
+  - For a contract simulation, reduced the number of dry run calls before the simulation from 3 to 1
+  - For a transfer from an account, reduced the number of dry run calls from 2 to 1
+  - Optimized predicate estimation so that there are no calls to the node if all predicates in a transaction have been estimated
+  - `Predicate.estimateTxDependencies` now returns receipts which are used for the purposes of the optimizations mentioned above
+  - `BaseInvocationScope.fundWithRequiredCoins` now calculates the `fee` parameter internally so it was removed from the function signature, by [@nedsalk](https://github.com/nedsalk) (See [#1767](https://github.com/FuelLabs/fuels-ts/pull/1767))
+
+### Patch Changes
+
+- exports InvocationCallResult, by [@Torres-ssf](https://github.com/Torres-ssf) (See [#1765](https://github.com/FuelLabs/fuels-ts/pull/1765))
+
 ## 0.74.0
 
 ### Minor Changes
